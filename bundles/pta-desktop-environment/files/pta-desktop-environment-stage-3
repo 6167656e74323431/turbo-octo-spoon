@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#exec <&-
+
+dex --autostart &
+swww init &
+swayidle -w &
+kanshi &
+dunst &
+somebar

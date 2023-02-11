@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+  export XDG_RUNTIME_DIR="/tmp/xdg-runtime-$(id -u)"
+  rm -rf $XDG_RUNTIME_DIR
+  mkdir -p $XDG_RUNTIME_DIR
+
+  exec dbus-launch dwl -s pta-desktop-environment-stage-3
+else
+  exec dwl -s pta-desktop-environment-stage-3
+fi
