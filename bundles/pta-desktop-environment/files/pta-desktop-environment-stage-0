@@ -1,0 +1,33 @@
+#!/bin/sh
+
+[ -z "$XDG_CONFIG_HOME" ] && XDG_CONFIG_HOME="$HOME/.config"
+
+if [ ! -f "$XDG_CONFIG_HOME/kanshi/config" ]; then
+  echo "kanshi config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/kanshi"
+  touch "$XDG_CONFIG_HOME/kanshi/config"
+fi
+
+if [ ! -f "$XDG_CONFIG_HOME/swayidle/config" ]; then
+  echo "swayidle config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/swayidle"
+  cat <<EOF > "$XDG_CONFIG_HOME/swayidle/config"
+lock         'swaylock -f'
+after-resume 'pgrep -x swaylock >/dev/null || swaylock -f'
+timeout 60   'pgrep -x swaylock >/dev/null && loginctl suspend'
+EOF
+fi
+
+if [ ! -f "$XDG_CONFIG_HOME/swaylock/config" ]; then
+  echo "swaylock config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/swaylock"
+  cat <<EOF > "$XDG_CONFIG_HOME/swaylock/config"
+color=000000
+ignore-empty-password
+indicator-idle-visible
+indicator-radius=75
+show-failed-attempts
+EOF
+fi
+
+exec pta-desktop-environment-stage-1

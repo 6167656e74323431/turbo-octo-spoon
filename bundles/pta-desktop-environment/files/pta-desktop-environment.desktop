@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=pta Desktop Environment
+Comment=dwl-based Desktop Environment
+Exec=/usr/bin/pta-desktop-environment
+Icon=
+Type=Application

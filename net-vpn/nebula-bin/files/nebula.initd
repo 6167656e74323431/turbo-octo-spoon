@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+# Copyright 2022 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+depend() {
+	need net
+
+	use logger
+}
+
+command="/usr/bin/nebula"
+command_args="-config /etc/nebula/config.yml"
+command_user="root:root"
+command_background=true
+pidfile="/run/${RC_SVCNAME}.pid"

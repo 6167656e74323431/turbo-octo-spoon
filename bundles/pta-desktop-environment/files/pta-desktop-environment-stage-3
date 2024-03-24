@@ -1,0 +1,11 @@
+#!/bin/sh
+
+exec <&-
+
+dex --autostart &
+swww-daemon &
+swayidle -w &
+kanshi &
+dunst &
+thunar --daemon &
+somebar &
