@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Commander X16 Emulator (bin)
+Comment=Emulator for the Commander X16 8-bit computer
+Exec=/opt/x16emu/x16emu
+Icon=
+Type=Application
