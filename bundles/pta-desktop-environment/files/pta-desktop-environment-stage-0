@@ -1,0 +1,105 @@
+#!/bin/sh
+
+[ -z "$XDG_CONFIG_HOME" ] && XDG_CONFIG_HOME="$HOME/.config"
+
+if [ ! -f "$XDG_CONFIG_HOME/kanshi/config" ]; then
+  echo "kanshi config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/kanshi"
+  touch "$XDG_CONFIG_HOME/kanshi/config"
+fi
+
+if [ ! -f "$XDG_CONFIG_HOME/river/init" ]; then
+  echo "river config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/river"
+  touch "$XDG_CONFIG_HOME/river/init"
+  chmod +x "$XDG_CONFIG_HOME/river/init"
+fi
+
+if [ ! -f "$XDG_CONFIG_HOME/swayidle/config" ]; then
+  echo "swayidle config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/swayidle"
+  cat <<EOF > "$XDG_CONFIG_HOME/swayidle/config"
+lock         'swaylock -f'
+after-resume 'pgrep -x swaylock >/dev/null || swaylock -f'
+timeout 60   'pgrep -x swaylock >/dev/null && loginctl suspend'
+EOF
+fi
+
+if [ ! -f "$XDG_CONFIG_HOME/swaylock/config" ]; then
+  echo "swaylock config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/swaylock"
+  cat <<EOF > "$XDG_CONFIG_HOME/swaylock/config"
+color=000000
+ignore-empty-password
+indicator-idle-visible
+indicator-radius=75
+show-failed-attempts
+EOF
+fi
+
+if [ ! -f "$XDG_CONFIG_HOME/yambar/config.yml" ]; then
+  echo "yambar config missing. Adding stub."
+  mkdir -p "$XDG_CONFIG_HOME/yambar"
+  cat <<EOF > "$XDG_CONFIG_HOME/yambar/config.yml"
+bg_empty: &bg_empty {stack: [{background: {color: 222222ff}}]}
+bg_occupied: &bg_occupied {stack: [{background: {color: 222222ff}}, {underline: {size: 2, color: bbbbbbff}}]}
+bg_focused: &bg_focused {stack: [{background: {color: 222222ff}}, {underline: {size: 2, color: f9a825ff}}]}
+bg_urget: &bg_urgent {stack: [{background: {color: f9a825ff}}, {underline: {size: 2, color: 222222ff}}]}
+
+bar:
+  height: 32
+  location: top
+  background: 222222ff
+  font: OpenSans:pixelsize=16
+
+  left:
+    - river:
+        anchors:
+          - base: &river_base
+              left-margin: 10
+              right-margin: 13
+              default: {string: {text: }}
+              conditions:
+                id == 1: {string: {text: 1}}
+                id == 2: {string: {text: 2}}
+                id == 3: {string: {text: 3}}
+                id == 4: {string: {text: 4}}
+                id == 5: {string: {text: 5}}
+                id == 6: {string: {text: 6}}
+                id == 7: {string: {text: 7}}
+                id == 8: {string: {text: 8}}
+                id == 9: {string: {text: 9}}
+        content:
+          map:
+            on-click:
+              left: sh -c "riverctl set-focused-tags \$((1 << ({id} - 1)))"
+              right: sh -c "riverctl toggle-focused-tags \$((1 << ({id} -1)))"
+              middle: sh -c "riverctl toggle-view-tags \$((1 << ({id} -1)))"
+            conditions:
+              state == urgent:
+                map:
+                  <<: *river_base
+                  deco: *bg_urgent
+              state == focused:
+                map:
+                  <<: *river_base
+                  deco: *bg_focused
+              occupied:
+                map:
+                  <<: *river_base
+                  deco: *bg_occupied
+              ~occupied && id < 10:
+                map:
+                  <<: *river_base
+
+    - foreign-toplevel:
+        content:
+          map:
+            conditions:
+              ~activated: {empty: {}}
+              activated:
+                - string: {text: "{title}"}
+EOF
+fi
+
+exec pta-desktop-environment-stage-1

@@ -1,0 +1,34 @@
+---
+ config.def.h | 2 ++
+ dwl.c        | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/config.def.h b/config.def.h
+index 32f4c12..9791694 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -16,6 +16,8 @@ static const unsigned int gappov           = 10; /* vert outer gap between windo
+ static const float bordercolor[]           = COLOR(0x444444ff);
+ static const float focuscolor[]            = COLOR(0x005577ff);
+ static const float urgentcolor[]           = COLOR(0xff0000ff);
++static const char cursortheme[]            = "Adwaita"; /* theme from /usr/share/cursors/xorg-x11 */
++static const unsigned int cursorsize       = 24;
+ /* To conform the xdg-protocol, set the alpha to zero to restore the old behavior */
+ static const float fullscreen_bg[]         = {0.1, 0.1, 0.1, 1.0}; /* You can also use glsl colors */
+ 
+diff --git a/dwl.c b/dwl.c
+index 0cf43e4..876bd80 100644
+--- a/dwl.c
++++ b/dwl.c
+@@ -2417,7 +2417,7 @@ setup(void)
+ 	 * Xcursor themes to source cursor images from and makes sure that cursor
+ 	 * images are available at all scale factors on the screen (necessary for
+ 	 * HiDPI support). Scaled cursors will be loaded with each output. */
+-	cursor_mgr = wlr_xcursor_manager_create(NULL, 24);
++	cursor_mgr = wlr_xcursor_manager_create(cursortheme, cursorsize);
+ 	setenv("XCURSOR_SIZE", "24", 1);
+ 
+ 	/*
+-- 
+2.43.0
+

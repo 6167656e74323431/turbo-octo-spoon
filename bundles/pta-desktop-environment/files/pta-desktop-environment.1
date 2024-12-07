@@ -1,0 +1,134 @@
+.TH PTA-DESKTOP-ENVIRONMENT 1 "8 January 2023" "" "pta Desktop Environment Manual"
+.SH NAME
+pta-desktop-environment \- arguably a complete desktop environment
+.SH SYNOPSIS
+.SY pta-desktop-environment
+.SY pta-desktop-environment-stage-0
+.YS
+.SY pta-desktop-environment-stage-1
+.YS
+.SY pta-desktop-environment-stage-2
+.YS
+.SY pta-desktop-environment-stage-3
+.YS
+.SH DESCRIPTION
+.B pta-desktop-environment
+starts a full Wayland desktop environment.
+It features everything that I (the writer) wants in a desktop environment.
+.SS KEYBINDINGS
+.TS
+l l.
+Keybinding	Action
+.T&
+lB l.
+_
+\&s-f	Launch a desktop application
+\&s-S-F	Run a binary
+\&s-<return>	Launch a terminal
+\&s-h	Launch this man page in a terminal
+\&<print>	Take a screenshot
+\&s-l	Lock the desktop environment
+\&s-n	Focus next window
+\&s-p	Focus previous window
+\&s-[	Decrease master size
+\&s-]	Increase master size
+\&s-S-{	Increase number of masters
+\&s-S-}	Decrease number of masters
+\&s-<dash>	Decrease outer gaps
+\&s-=	Increase outer gaps
+\&s-S-_	Decrease inner gaps
+\&s-S-+	Increase inner gaps
+\&s-z	Make master
+\&s-<tab>	Switch to last tag
+\&s-S-C	Kill focused window
+\&M-<f4>	Kill focused window
+\&s-<space>	Switch to last layout
+\&s-C-q	Set layout to stack
+\&s-C-q	Set layout to floating
+\&s-C-q	Set layout to monocle
+\&s-S-<space>	Toggle floating on focused window
+\&s-e	Toggle fullscreen on window
+\&s-0	Toggle all tags
+\&s-S-)	Put window on all tags
+\&s-,	Move monitor focus up
+\&s-.	Move monitor focus down
+\&s-S-<	Move window to above monitor
+\&s-S->	Move window to below monitor
+\&s-<digit>	Toggle to tag <digit>
+\&s-S-<digit>	Move window to tag <digit>
+\&s-C-<digit>	Toggle tag <digit>
+\&s-S-C-<digit>	Toggle tag <digit> on window
+\&s-S-Q	Quit the desktop environment
+.TE
+.P
+Where C, S, M, and s denote the control, shift, meta (alt), and super keys respectively.
+And <digit> represents any number 1-9 or, if shifted, its respective key on the US keyboard layout.
+.P
+Additionally holding the super key and pressing mouse1 moves the focused window, pressing mouse2 resizes the focused window, and pressing mouse3 toggles floating on the focused window.
+.SH NOTES
+.B pta-desktop-environment
+is currently just an alias for the
+.B pta-desktop-environment-stage-0
+command.
+.P
+Each of the
+.B pta-desktop-environment-stage-(n)
+commands is set up to handle one part of the initialization of the desktop environment.
+At the end of its execution it then starts the next stage (either by
+.B exec
+or by subprocess).
+This means
+.B pta-desktop-environment-stage-(n)
+eventually runs
+.B pta-desktop-environment-stage-(n+1)
+and assumptions are made based on this call chain being the only way
+.B pta-desktop-environment-stage-(n+1)
+was called.
+So none of the
+.B pta-desktop-environment-stage-(n)
+commands should be called by hand unless you really understand what you are doing.
+.P
+That being said, the
+.B pta-desktop-environment-stage-(n)
+commands are organized as follows.
+.P
+.B pta-desktop-environment-stage-0
+adds any missing configuration files.
+Its job is to ensure that none of the later stages fail because something was missing (as opposed to if something was misconfigured).
+It does this so that on a new system, it is guaranteed to launch.
+.P
+.B pta-desktop-environment-stage-1
+Starts anything that does not require D-Bus or a windowing system, or that has side effects that the desktop environment must observe.
+This used to include
+.B ssh-agent
+which sets some environment variables, but currently contains nothing.
+.P
+.B pta-desktop-environment-stage-2
+guarantees that D-Bus is properly set up and then launches the window manager.
+Currently
+.BR river (1)
+serves as the window manager.
+.P
+.B pta-desktop-environment-stage-3
+starts everything else.
+This includes the configured system and user autostart programs.
+This additionally includes the wallpaper daemon, the idle daemon, the monitor daemon, and the top bar.
+.SH BUGS
+Plenty, I'm sure of it.
+.SH SEE ALSO
+.BR alacritty (1),
+.BR bemenu (1),
+.BR dunst (1),
+.BR river (1),
+.BR grim (1),
+.BR j4-dmenu-desktop (1),
+.BR kanshi (1),
+.BR pipewire (1),
+.BR slurp (1),
+.BR somebar (1),
+.BR swappy (1),
+.BR swayidle (1),
+.BR swaylock (1),
+.BR thunar (1),
+.BR xwayland (1),
+.BR elogind (8)
