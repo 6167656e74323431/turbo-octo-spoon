@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export XDG_RUNTIME_DIR="/tmp/xdg-runtime-$(id -u)"
+export XDG_CURRENT_DESKTOP=sway
+
+rm -rf "$XDG_RUNTIME_DIR"
+mkdir -p "$XDG_RUNTIME_DIR"
+chmod 0700 "$XDG_RUNTIME_DIR"
+
+exec dbus-run-session river -c pta-desktop-environment-stage-3
